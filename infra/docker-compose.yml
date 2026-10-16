@@ -1,0 +1,78 @@
+# ATLAS containerised stack (equivalent of `python scripts/atlas.py up`).
+#   docker compose -f infra/docker-compose.yml up --build
+# NOTE: authored for production-like deployments; the local demo in this repo was
+# verified with the no-Docker launcher because Docker was not installed on the build machine.
+name: atlas
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-atlas-local-only}
+      POSTGRES_DB: atlas
+    ports: ["5433:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas -d atlas"]
+      interval: 5s
+      retries: 20
+
+  temporal:
+    image: temporalio/temporal:1.9.1
+    command: ["server", "start-dev", "--ip", "0.0.0.0", "--db-filename", "/data/temporal.db"]
+    ports: ["7233:7233", "8233:8233"]
+    volumes: [temporaldata:/data]
+
+  migrate:
+    build: { context: .., dockerfile: infra/api.Dockerfile }
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    environment: &api-env
+      ATLAS_DATABASE_URL: postgresql+psycopg://atlas:${POSTGRES_PASSWORD:-atlas-local-only}@postgres:5432/atlas
+      ATLAS_TEMPORAL_ADDRESS: temporal:7233
+      ATLAS_ORCHESTRATOR: auto
+      ATLAS_PROVIDER_MODE: ${ATLAS_PROVIDER_MODE:-demo}
+      ATLAS_LLM_PROVIDER: ${ATLAS_LLM_PROVIDER:-demo}
+      ATLAS_LLM_BASE_URL: ${ATLAS_LLM_BASE_URL:-http://host.docker.internal:11434/v1}
+      ATLAS_LLM_MODEL: ${ATLAS_LLM_MODEL:-llama3.2:3b}
+      ATLAS_LLM_API_KEY: ${ATLAS_LLM_API_KEY:-}
+      ATLAS_CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  api:
+    build: { context: .., dockerfile: infra/api.Dockerfile }
+    command: ["python", "-m", "uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: *api-env
+    ports: ["8000:8000"]
+    volumes: [articles:/app/outputs/articles]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal: { condition: service_started }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      retries: 10
+
+  worker:
+    build: { context: .., dockerfile: infra/api.Dockerfile }
+    command: ["python", "-m", "workers.worker"]
+    environment: *api-env
+    volumes: [articles:/app/outputs/articles]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal: { condition: service_started }
+    deploy: { replicas: 1 }   # scale horizontally: docker compose up --scale worker=3
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: ../../infra/web.Dockerfile
+      args: { NEXT_PUBLIC_API_URL: "http://127.0.0.1:8000", NEXT_PUBLIC_TEMPORAL_UI_URL: "http://127.0.0.1:8233" }
+    ports: ["3000:3000"]
+    depends_on: [api]
+
+volumes:
+  pgdata: {}
+  temporaldata: {}
+  articles: {}

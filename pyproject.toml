@@ -50,6 +50,6 @@ select = ["E", "F", "I", "B", "UP", "S"]
 ignore = ["S101", "S311", "B008", "E501"]
 
 [tool.ruff.lint.per-file-ignores]
-"scripts/*" = ["S603", "S607", "S608"]  # local dev tooling invoking fixed, project-local binaries
+"scripts/*" = ["S603", "S607", "S608", "S310"]  # local dev tooling invoking fixed, project-local binaries
 "packages/contracts/enums.py" = ["S105"]  # "PASS" is a compliance status, not a password
 "tests/*" = ["S", "B017"]
