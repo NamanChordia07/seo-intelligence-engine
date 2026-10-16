@@ -1,0 +1,49 @@
+intent_key: "login:exness"
+language: en
+title: "Exness Login Problems: Step-by-Step Fixes and Account Security Checks"
+h1: "Can't Log In to Exness? Step-by-Step Fixes and Security Checks"
+slug: "exness-login-problems-fixes"
+meta_description: "Troubleshoot Exness login problems step by step: password and 2FA resets, app and browser fixes, phishing red flags, and when to contact official support."
+angle: "Neutral troubleshooting that prioritises account security (phishing is the main risk during outage chatter) and avoids any unverifiable claims about the broker."
+audience: "Existing account holders in India who cannot sign in, often during a spike in 'is it down' searches"
+introduction: |
+  Login problems usually have ordinary causes - a mistyped password, an expired session, a lost two-factor device or an outdated app. But when many people search for login problems at the same time, scammers also circulate fake "login" pages and "support" numbers. This guide gives a calm, step-by-step troubleshooting order and the security checks to run before you type your password anywhere. It is independent and not affiliated with any broker; for account-specific issues only the platform's official support can help.
+sections:
+  - heading: "Step 1: Rule out a wider outage"
+    body: |
+      If many users report problems at the same moment, the issue may be on the platform side. Check the platform's official status or announcement channels that you reached from its official website, not from links shared in social media comments. Avoid "is it down" posts that ask you to sign in through a link - that is a common phishing pattern.
+  - heading: "Step 2: Check the basics on your side"
+    body: |
+      - Confirm you are using the exact email or account ID you registered with.
+      - Check caps lock and keyboard language - Hindi or other input methods can change characters silently.
+      - Clear the browser cache or try a private window; for the mobile app, update it from the official app store listing.
+      - Switch networks (mobile data vs Wi-Fi) to rule out a local block or DNS issue.
+      - Make sure your device date and time are set automatically; wrong time can break one-time codes.
+  - heading: "Step 3: Reset your password safely"
+    body: |
+      Use the "forgot password" option only on the official website you typed in yourself or saved as a bookmark. A genuine reset email will never ask you to reply with your password or a one-time code. If you did not request a reset email, do not click it - treat it as a possible phishing attempt.
+  - heading: "Step 4: Lost access to two-factor authentication"
+    body: |
+      If you changed phones or lost the device that generates or receives your codes, account recovery normally requires identity verification through official support. Expect to be asked for KYC documents. Never share one-time codes or your password with anyone who contacts you first, even if they claim to be support staff.
+  - heading: "Phishing and fake support: the biggest risk"
+    body: |
+      During login-problem spikes, fake websites with similar-looking addresses and fake "customer care numbers" appear in search ads and messaging groups. CERT-In, India's national cyber-security incident response agency, publishes advisories on phishing and related threats.[[E:cert-in]] If you entered your credentials on a suspicious page, change your password immediately from the official site, enable two-factor authentication and review recent account activity. Financial fraud should be reported on the National Cyber Crime Reporting Portal or by calling helpline 1930.[[E:cybercrime-portal]]
+  - heading: "Account blocked or restricted"
+    body: |
+      Sometimes the login works but the account is restricted - for example pending verification, a security hold or a jurisdiction restriction. Ask official support for the specific reason in writing. Note that for Indian residents, RBI permits forex transactions only with authorised entities on authorised platforms or recognised exchanges, so platform availability and legal status are separate questions from a technical login fix.[[E:rbi-alert-list-2022]] Read [[L:regulation:generic|whether forex trading is legal in India]] for that context.
+  - heading: "If your funds are affected"
+    body: |
+      If you cannot access an account that holds money, document everything: screenshots, ticket numbers and emails. Do not pay "recovery agents". Our [[L:withdrawal:generic|withdrawal troubleshooting guide]] lists the escalation routes, including RBI's Sachet portal for concerns about unauthorised entities.[[E:sachet-rbi]]
+faq:
+  - question: "Why does my login keep failing even with the right password?"
+    answer: "Common causes are an old app version, cached session data, wrong device time breaking one-time codes, or an account restriction. Work through the steps above in order."
+  - question: "Is a 'customer care number' from a search ad safe to call?"
+    answer: "Be cautious. Use only contact details reached from the official website you typed yourself. Fake support numbers are a common fraud pattern; report fraud at cybercrime.gov.in or 1930.[[E:cybercrime-portal]]"
+  - question: "What should I do if I entered my password on a fake site?"
+    answer: "Change the password from the official site immediately, enable two-factor authentication, check account activity and report the phishing page."
+  - question: "Can support staff ask for my one-time code?"
+    answer: "No legitimate support process needs your password or one-time code. Treat any such request as a scam."
+key_takeaways:
+  - "Rule out an outage, then fix device-side issues before resetting credentials."
+  - "Only use official, self-typed addresses for resets and support."
+  - "Phishing spikes during outage chatter - never share one-time codes."

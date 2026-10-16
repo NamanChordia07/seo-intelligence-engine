@@ -1,0 +1,31 @@
+# Default demo tenant / project. Seeded by `python -m scripts.seed` (and on API startup if empty).
+tenant:
+  name: ATLAS Demo Tenant
+  slug: atlas-demo
+project:
+  name: India Trading Search Intelligence Demo
+  slug: india-trading-demo
+  domain: demo-trading-platform.example
+  default_locale: en-IN
+  settings:
+    target_platform_name: "Demo Trading Platform (fictional)"
+    # Regulatory authorization of the TARGET platform to solicit Indian residents.
+    # UNKNOWN => promotional content is never auto-approved (BLOCKED_PENDING_AUTHORIZATION).
+    india_authorization_status: UNKNOWN
+    markets: ["IN"]
+    languages: ["en", "hi", "hi-Latn"]
+    max_pages_per_day: 2
+    cta_policy: >-
+      Educational CTA only (subscribe / read related risk guides). No account-opening, deposit or bonus
+      solicitation while India authorization is UNKNOWN.
+entities:
+  - {key: exness, name: Exness, kind: BROKER, aliases: [exness, एक्सनेस]}
+  - {key: xm, name: XM, kind: BROKER, aliases: [xm, xm.com, एक्सएम]}
+  - {key: octafx, name: OctaFX, kind: BROKER, aliases: [octafx, octa, ऑक्टा]}
+  - {key: ic-markets, name: IC Markets, kind: BROKER, aliases: [ic markets, icmarkets]}
+  - {key: pepperstone, name: Pepperstone, kind: BROKER, aliases: [pepperstone]}
+  - {key: olymp-trade, name: Olymp Trade, kind: BROKER, aliases: [olymp trade, olymptrade]}
+  - {key: india-forex-regulation, name: India forex regulation, kind: TOPIC, aliases: [rbi, fema, sebi]}
+  - {key: trading-costs, name: Trading costs (spreads/fees), kind: TOPIC, aliases: [spread, fees, swap]}
+  - {key: rbi, name: Reserve Bank of India, kind: REGULATOR, aliases: [rbi, आरबीआई]}
+  - {key: sebi, name: Securities and Exchange Board of India, kind: REGULATOR, aliases: [sebi, सेबी]}

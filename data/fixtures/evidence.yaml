@@ -1,0 +1,227 @@
+# EVIDENCE REGISTRY (research fixtures)
+# ------------------------------------------------------------------
+# Every entry is a REAL public document (source_type: REAL_PUBLIC). Snippets are
+# short paraphrases/excerpts captured on 2026-10-16 while building the demo
+# (retrieval_mode: FIXTURE_SNAPSHOT). They must be re-verified against the live
+# URL before any real publication. With ATLAS_LIVE_RESEARCH=true the research
+# worker re-fetches each URL (robots.txt + SSRF guard) and records the HTTP status.
+#
+# verification_status per claim:
+#   VERIFIED_SNAPSHOT - claim is directly supported by the captured document
+#   UNVERIFIED        - claim could not be confirmed from a primary source
+#   CONFLICTING       - sources disagree; never stated as fact in content
+# ------------------------------------------------------------------
+- key: rbi-alert-list-2022
+  url: "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=54333"
+  title: "RBI issues Alert List of entities not authorised to deal in forex and to operate electronic trading platforms for forex transactions"
+  publisher: Reserve Bank of India
+  source_class: PRIMARY_REGULATOR
+  published_at: "2022-09-07"
+  tags: [regulation, alternative, comparison, withdrawal, login, fees, india]
+  snippet: >-
+    RBI published an Alert List of entities that are neither authorised to deal in forex under FEMA nor
+    authorised to operate ETPs for forex transactions. "An entity not appearing in the Alert List should not be
+    assumed to be authorised by the RBI." Resident persons can undertake forex transactions only with authorised
+    persons and on authorised ETPs or recognised stock exchanges.
+  claims:
+    - {key: alert-list-exists, claim: "RBI maintains an Alert List of unauthorised forex trading platforms", type: regulation, confidence: 0.95, status: VERIFIED_SNAPSHOT}
+    - {key: alert-list-not-exhaustive, claim: "Absence from the Alert List does not mean an entity is authorised", type: regulation, confidence: 0.95, status: VERIFIED_SNAPSHOT}
+    - {key: residents-authorised-only, claim: "Residents may undertake forex transactions only with authorised persons / on authorised ETPs or recognised exchanges", type: regulation, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: rbi-forex-faq
+  url: "https://rbi.org.in/Scripts/FAQView.aspx?Id=146"
+  title: "Frequently Asked Questions - Foreign Exchange (Forex) Transactions"
+  publisher: Reserve Bank of India
+  source_class: PRIMARY_REGULATOR
+  published_at: "2022-09-07"
+  tags: [regulation, alternative, leverage, fees, comparison, withdrawal, india]
+  snippet: >-
+    Permitted forex transactions executed electronically should be undertaken only on ETPs authorised by RBI or on
+    recognised stock exchanges (NSE, BSE, MSE). Residents may trade exchange-traded currency futures/options in
+    USD-INR, EUR-INR, GBP-INR, JPY-INR and the cross pairs EUR-USD, GBP-USD and USD-JPY. Residents remitting or
+    depositing money for unauthorised forex transactions render themselves liable for penal action under FEMA.
+  claims:
+    - {key: etp-or-exchange-only, claim: "Electronic forex trades must be on RBI-authorised ETPs or recognised exchanges", type: regulation, confidence: 0.95, status: VERIFIED_SNAPSHOT}
+    - {key: permitted-pairs, claim: "Exchange-traded currency derivatives are permitted in USD-INR, EUR-INR, GBP-INR, JPY-INR, EUR-USD, GBP-USD, USD-JPY", type: regulation, confidence: 0.85, status: VERIFIED_SNAPSHOT}
+    - {key: fema-penal-action, claim: "Residents dealing on unauthorised platforms are liable to penal action under FEMA", type: regulation, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: esma-cfd-2018
+  url: "https://www.esma.europa.eu/node/84933"
+  title: "ESMA agrees to prohibit binary options and restrict CFDs to protect retail investors"
+  publisher: European Securities and Markets Authority
+  source_class: PRIMARY_REGULATOR
+  published_at: "2018-03-27"
+  tags: [leverage, fees, comparison, risk, regulation]
+  snippet: >-
+    National regulators' analyses found that 74-89% of retail accounts typically lose money on CFDs. ESMA's
+    measures included leverage limits for retail clients from 30:1 to 2:1 depending on the underlying's
+    volatility and a standardised risk warning. (2018 finding - historical context, not a current statistic.)
+  claims:
+    - {key: cfd-loss-rate, claim: "74-89% of retail CFD accounts typically lost money (ESMA, 2018)", type: statistic, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+    - {key: esma-leverage-limits, claim: "ESMA retail leverage limits ranged from 30:1 to 2:1 (2018)", type: regulation, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: ed-octafx-2025-07
+  url: "https://enforcementdirectorate.gov.in/sites/default/files/latestnews/Press%20Release%20PAO%20OctaFX%203.7.2025%203.pdf"
+  title: "Press release: Provisional attachment in OctaFX money-laundering investigation (03.07.2025)"
+  publisher: Directorate of Enforcement, Government of India
+  source_class: OFFICIAL_GOVERNMENT
+  published_at: "2025-07-03"
+  tags: [alternative, news, octafx]
+  live_note: "Listed in search index; returned HTTP 404 to an automated client at fixture build time - verify manually."
+  snippet: >-
+    ED Mumbai issued a provisional attachment order in its PMLA investigation linked to the OctaFX forex trading
+    platform, attaching assets in Spain.
+  claims:
+    - {key: ed-octafx-pmla, claim: "ED is investigating OctaFX-linked entities under PMLA and has provisionally attached assets", type: enforcement, confidence: 0.8, status: VERIFIED_SNAPSHOT}
+
+- key: theweek-octafx-2025-07
+  url: "https://www.theweek.in/wire-updates/national/2025/07/03/des87-ed-yacht-spain-attach.html"
+  title: "Forex-trading cheating: ED attaches yacht, house worth Rs 131 crore in Spain"
+  publisher: The Week (PTI wire)
+  source_class: SECONDARY_MEDIA
+  published_at: "2025-07-03"
+  tags: [alternative, news, octafx]
+  snippet: >-
+    The ED provisionally attached a yacht, residences and other assets in Spain worth about Rs 131 crore in its
+    money-laundering probe linked to the OctaFX trading platform.
+  claims:
+    - {key: ed-octafx-131cr, claim: "ED attached assets in Spain worth about Rs 131 crore (July 2025)", type: enforcement, confidence: 0.8, status: VERIFIED_SNAPSHOT}
+
+- key: hitavada-octafx-2025-10
+  url: "https://www.thehitavada.com/Encyc/2025/10/18/ed-attaches-rs-2385-cr-crypto-assets-in-octafx-ponzi-scam.html"
+  title: "ED attaches Rs 2,385 cr crypto assets in OctaFX probe"
+  publisher: The Hitavada
+  source_class: SECONDARY_MEDIA
+  published_at: "2025-10-18"
+  tags: [alternative, news, octafx]
+  snippet: >-
+    The ED issued a provisional attachment order covering cryptocurrency worth about Rs 2,385 crore in the
+    OctaFX-linked investigation (October 2025).
+  claims:
+    - {key: ed-octafx-2385cr, claim: "ED attached crypto assets worth about Rs 2,385 crore (October 2025)", type: enforcement, confidence: 0.75, status: VERIFIED_SNAPSHOT}
+
+- key: fm-octa-response
+  url: "https://www.financemagnates.com/forex/india-cherry-picks-a-luxury-yacht-in-probe-against-octa/"
+  title: "India 'Cherry' Picks a Luxury Yacht in Probe Against Octa"
+  publisher: Finance Magnates
+  source_class: SECONDARY_MEDIA
+  published_at: "2025-07"
+  tags: [alternative, news, octafx]
+  snippet: >-
+    Octa has rejected allegations of money laundering and trading manipulation and has said it is not affiliated
+    with the individual named by investigators.
+  claims:
+    - {key: octa-denies, claim: "Octa has publicly rejected the allegations", type: enforcement, confidence: 0.7, status: VERIFIED_SNAPSHOT}
+
+- key: sachet-rbi
+  url: "https://sachet.rbi.org.in/"
+  title: "Sachet - Reserve Bank of India portal"
+  publisher: Reserve Bank of India
+  source_class: PRIMARY_REGULATOR
+  tags: [regulation, alternative, withdrawal, login]
+  snippet: "RBI's Sachet portal lets the public share information about, and lodge complaints against, entities engaged in unauthorised financial activity."
+  claims:
+    - {key: sachet-report, claim: "Sachet (RBI) accepts public complaints/information about unauthorised entities", type: process, confidence: 0.85, status: VERIFIED_SNAPSHOT}
+
+- key: cybercrime-portal
+  url: "https://cybercrime.gov.in/"
+  title: "National Cyber Crime Reporting Portal"
+  publisher: Ministry of Home Affairs, Government of India
+  source_class: OFFICIAL_GOVERNMENT
+  tags: [withdrawal, login, alternative]
+  snippet: "Government portal for reporting cyber crime, including financial fraud; the financial-fraud helpline number 1930 is publicised on the portal."
+  claims:
+    - {key: cybercrime-report, claim: "Financial cyber fraud can be reported at cybercrime.gov.in or helpline 1930", type: process, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: cert-in
+  url: "https://www.cert-in.org.in/"
+  title: "Indian Computer Emergency Response Team (CERT-In)"
+  publisher: Ministry of Electronics and IT, Government of India
+  source_class: OFFICIAL_GOVERNMENT
+  tags: [login]
+  snippet: "CERT-In is the national agency for responding to computer security incidents and publishes advisories, including on phishing."
+  claims:
+    - {key: certin-phishing, claim: "CERT-In publishes cyber-security advisories including phishing guidance", type: process, confidence: 0.8, status: VERIFIED_SNAPSHOT}
+
+- key: sebi-intermediaries
+  url: "https://www.sebi.gov.in/intermediaries.html"
+  title: "SEBI - Registered intermediaries"
+  publisher: Securities and Exchange Board of India
+  source_class: PRIMARY_REGULATOR
+  tags: [regulation, alternative, comparison]
+  snippet: "SEBI publishes lists of registered intermediaries, including stock brokers, which investors can use to verify registration."
+  claims:
+    - {key: sebi-broker-list, claim: "Investors can verify a stock broker's SEBI registration from SEBI's intermediary lists", type: process, confidence: 0.85, status: VERIFIED_SNAPSHOT}
+
+- key: nse-currency
+  url: "https://www.nseindia.com/market-data/currency-derivatives"
+  title: "NSE - Currency derivatives market data"
+  publisher: National Stock Exchange of India
+  source_class: EXCHANGE
+  tags: [regulation, alternative, fees]
+  snippet: "NSE operates an exchange-traded currency derivatives segment (futures and options on permitted currency pairs)."
+  claims:
+    - {key: nse-currency-segment, claim: "NSE runs an exchange-traded currency derivatives segment", type: regulation, confidence: 0.85, status: VERIFIED_SNAPSHOT}
+
+- key: fca-register
+  url: "https://register.fca.org.uk/"
+  title: "FCA Financial Services Register"
+  publisher: Financial Conduct Authority (UK)
+  source_class: PRIMARY_REGULATOR
+  tags: [comparison, review]
+  snippet: "Public register to check whether a firm or individual is authorised by the UK FCA, and which permissions apply."
+  claims:
+    - {key: fca-register-check, claim: "The FCA Register can be used to check a UK firm's authorisation", type: process, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: cysec-home
+  url: "https://www.cysec.gov.cy/en-GB/home/"
+  title: "Cyprus Securities and Exchange Commission (CySEC)"
+  publisher: CySEC
+  source_class: PRIMARY_REGULATOR
+  tags: [comparison, review]
+  snippet: "CySEC is Cyprus's financial regulator and publishes registers of regulated investment firms."
+  claims:
+    - {key: cysec-register-check, claim: "CySEC publishes registers of regulated investment firms", type: process, confidence: 0.8, status: VERIFIED_SNAPSHOT}
+
+- key: fm-directory-exness
+  url: "https://directory.financemagnates.com/forex-brokers/exness/"
+  title: "Exness - broker directory listing"
+  publisher: Finance Magnates (third-party directory)
+  source_class: THIRD_PARTY_DIRECTORY
+  tags: [comparison, review, exness]
+  snippet: >-
+    Third-party listings attribute several licences to Exness group entities (e.g. FCA, CySEC, FSCA, FSA
+    Seychelles). Licence numbers and entity names differ between third-party sources and were not confirmed on
+    regulator registers during research.
+  claims:
+    - {key: exness-licences, claim: "Exness group entities are reported to hold multiple offshore and onshore licences", type: broker_property, confidence: 0.4, status: CONFLICTING}
+
+- key: investopedia-spread
+  url: "https://www.investopedia.com/terms/s/spread.asp"
+  title: "Spread: Meaning, Types, and Examples"
+  publisher: Investopedia
+  source_class: EDUCATIONAL_REFERENCE
+  tags: [fees, comparison]
+  snippet: "A spread is the difference between the bid (sell) and ask (buy) price of an asset; in forex it is usually measured in pips."
+  claims:
+    - {key: spread-definition, claim: "Spread = ask price minus bid price", type: definition, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: investopedia-pip
+  url: "https://www.investopedia.com/terms/p/pip.asp"
+  title: "Pip: What It Means in Forex"
+  publisher: Investopedia
+  source_class: EDUCATIONAL_REFERENCE
+  tags: [fees]
+  snippet: "A pip is the smallest standard price move in a currency pair - 0.0001 for most pairs and 0.01 for yen pairs."
+  claims:
+    - {key: pip-definition, claim: "A pip is 0.0001 for most pairs and 0.01 for JPY pairs", type: definition, confidence: 0.9, status: VERIFIED_SNAPSHOT}
+
+- key: investopedia-rollover
+  url: "https://www.investopedia.com/terms/r/rollover.asp"
+  title: "Rollover Definition in Forex"
+  publisher: Investopedia
+  source_class: EDUCATIONAL_REFERENCE
+  tags: [fees]
+  snippet: "Rollover (swap) is the interest paid or earned for holding a currency position overnight."
+  claims:
+    - {key: swap-definition, claim: "Swap/rollover is interest charged or earned for holding positions overnight", type: definition, confidence: 0.9, status: VERIFIED_SNAPSHOT}

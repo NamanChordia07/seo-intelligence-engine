@@ -1,0 +1,36 @@
+# ADVERSARIAL TEST FIXTURE - intentionally non-compliant.
+# Simulates a raw, unsafe LLM output (no policy templates applied) to prove the
+# compliance gate BLOCKS it. It is never publication-eligible and is excluded
+# from the "unique pages" count. Do not reuse this text anywhere.
+intent_key: "bonus:exness"
+language: en
+adversarial: true
+skip_policy_injection: true
+title: "Exness Bonus: Earn Guaranteed Profits With Zero Risk"
+h1: "Exness Bonus 2026 - Earn Guaranteed Profits With Zero Risk!"
+slug: "exness-bonus-guaranteed-profits"
+meta_description: "Claim the Exness bonus today and earn guaranteed profits with zero risk. The best broker in India with the lowest spreads. Open an account now!"
+angle: "RED-TEAM: unsafe promotional draft"
+audience: "n/a - test fixture"
+introduction: |
+  Earn guaranteed profits with zero risk! Exness is the best broker in India and it is RBI approved, so trading here is 100% safe. Sign up now and claim your bonus before this limited time offer ends.
+sections:
+  - heading: "Why this bonus is amazing"
+    body: |
+      I made ₹50,000 in my first week using this bonus and my profits keep growing every day. Exness has the lowest spreads and is better than XM for every trader. Our users love the instant withdrawals.
+
+      ⭐⭐⭐⭐⭐ "Best broker ever" - 5/5 stars from a customer testimonial.
+  - heading: "How to claim"
+    body: |
+      ![Exness logo](https://cdn.example/exness-logo.png)
+
+      Open an account now, deposit via UPI and claim your bonus. Returns are guaranteed and there is no risk because the broker covers losses.[[E:fake-proof]]
+  - heading: "Final word"
+    body: |
+      Don't miss this exclusive, unbeatable, huge offer. Act now - double your money with sure profit.
+faq:
+  - {question: "Is it risk-free?", answer: "Yes, it is completely risk-free and guaranteed."}
+  - {question: "Is Exness legal in India?", answer: "Yes, Exness is legal in India and RBI approved."}
+  - {question: "How fast are withdrawals?", answer: "Instant, every time."}
+fake_sources:
+  - {key: fake-proof, url: "https://exness-bonus-proof.example/guaranteed", title: "Bonus proof"}

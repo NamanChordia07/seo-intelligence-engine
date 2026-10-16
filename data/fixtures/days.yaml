@@ -1,0 +1,60 @@
+# SIMULATED / DEMONSTRATION DATA
+# ------------------------------------------------------------------
+# Deterministic search signals for the Day 1-3 walkthrough. These are NOT real
+# search volumes. `demand` is a relative 0-100 index and `trend` a relative
+# period-over-period change, both labelled SIMULATED wherever they are shown.
+#
+# `via`:
+#   suggest -> returned by the simulated autocomplete provider for an expanded seed
+#   trend   -> returned by the simulated trends provider (rising queries)
+#   news    -> returned by the simulated news provider (breaking topics)
+# ------------------------------------------------------------------
+day1:
+  date: "2026-10-14"
+  narrative: "Baseline discovery. Legality and withdrawal questions dominate Hindi/Hinglish demand."
+  observations:
+    - {q: "भारत में forex trading legal है क्या", demand: 82, trend: 0.45, via: trend}
+    - {q: "is forex trading legal in india", demand: 74, trend: 0.20, via: suggest}
+    - {q: "forex trading legal hai ya nahi", demand: 58, trend: 0.30, via: suggest}
+    - {q: "forex broker se paisa withdraw kaise kare", demand: 76, trend: 0.70, via: trend}
+    - {q: "forex broker withdrawal problem", demand: 52, trend: 0.25, via: suggest}
+    - {q: "exness withdrawal time", demand: 64, trend: 0.10, via: suggest}
+    - {q: "is exness legal in india", demand: 61, trend: 0.15, via: suggest}
+    - {q: "exness review", demand: 57, trend: 0.05, via: suggest}
+    - {q: "exness login problem", demand: 49, trend: 0.10, via: suggest}
+    - {q: "xm vs exness", demand: 51, trend: 0.15, via: suggest}
+    - {q: "exness bonus", demand: 46, trend: 0.05, via: suggest}
+    - {q: "olymp trade review", demand: 38, trend: -0.10, via: suggest}
+    - {q: "forex trading kya hai", demand: 55, trend: 0.05, via: suggest}
+    - {q: "एक्सनेस से पैसे कैसे निकालें", demand: 44, trend: 0.20, via: suggest}
+day2:
+  date: "2026-10-15"
+  narrative: "Login complaints spike (simulated outage chatter); comparison interest rises."
+  redteam: true  # also push an intentionally unsafe draft through the compliance gate
+  observations:
+    - {q: "exness vs xm", demand: 72, trend: 0.85, via: trend}
+    - {q: "exness login problem", demand: 70, trend: 1.40, via: trend}
+    - {q: "exness login nahi ho raha", demand: 47, trend: 1.10, via: suggest}
+    - {q: "is forex trading legal in india 2026", demand: 71, trend: 0.15, via: suggest}
+    - {q: "भारत में फॉरेक्स ट्रेडिंग लीगल है या नहीं", demand: 66, trend: 0.20, via: suggest}
+    - {q: "exness withdrawal time", demand: 65, trend: 0.12, via: suggest}
+    - {q: "is exness legal in india", demand: 60, trend: 0.10, via: suggest}
+    - {q: "xm deposit upi", demand: 50, trend: 0.20, via: suggest}
+    - {q: "exness app not working", demand: 46, trend: 0.60, via: suggest}
+    - {q: "exness bonus", demand: 52, trend: 0.25, via: suggest}
+    - {q: "pepperstone review", demand: 33, trend: 0.00, via: suggest}
+day3:
+  date: "2026-10-16"
+  narrative: "News-led spike: enforcement coverage drives 'OctaFX alternative' searches; cost questions in Hindi."
+  observations:
+    - {q: "octafx alternative india", demand: 69, trend: 1.60, via: news, news: true}
+    - {q: "octafx news", demand: 63, trend: 2.00, via: news, news: true}
+    - {q: "फॉरेक्स स्प्रेड क्या है", demand: 71, trend: 0.40, via: trend}
+    - {q: "forex spread kya hota hai", demand: 57, trend: 0.30, via: suggest}
+    - {q: "exness spread", demand: 58, trend: 0.20, via: suggest}
+    - {q: "exness vs xm which is better", demand: 62, trend: 0.30, via: suggest}
+    - {q: "xm vs exness", demand: 55, trend: 0.20, via: suggest}
+    - {q: "forex leverage kya hai", demand: 54, trend: 0.25, via: suggest}
+    - {q: "forex leverage explained", demand: 50, trend: 0.10, via: suggest}
+    - {q: "exness login nahi ho raha", demand: 41, trend: 0.10, via: suggest}
+    - {q: "exness bonus", demand: 49, trend: 0.10, via: suggest}

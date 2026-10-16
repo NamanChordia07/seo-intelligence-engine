@@ -1,0 +1,85 @@
+# SIMULATED / DEMONSTRATION SERP OBSERVATIONS
+# Domains use the reserved `.example` TLD so they can never be mistaken for real results.
+# Row: [page_type, url, title, published YYYY-MM, word_count, has_faq(0/1), authority_proxy 0-1, intent_match 0-1, "h2 | h2 | ..."]
+# authority_proxy / intent_match are ATLAS simulated heuristics - not Google/Ahrefs/Semrush metrics.
+
+"regulation:generic|hi":
+  - [forum, "https://traderforum.example/t/forex-legal-india-hindi", "क्या भारत में फॉरेक्स legal है? - forum thread", "2023-02", 450, 0, 0.35, 0.45, "replies"]
+  - [video, "https://videos.example/watch/forex-legal-hindi", "Forex trading legal or illegal in India (Hindi video)", "2022-11", 120, 0, 0.55, 0.40, ""]
+  - [article, "https://hindifinance.example/forex-trading-kya-hai", "फॉरेक्स ट्रेडिंग क्या है", "2021-06", 900, 0, 0.40, 0.30, "फॉरेक्स क्या है | कैसे करें"]
+  - [article, "https://brokerpromo.example/hi/forex-legal", "Forex legal hai - abhi account kholo", "2024-01", 600, 0, 0.30, 0.35, "bonus offer"]
+  - [qa, "https://qa.example/q/forex-legal-india", "Is forex legal in India? (Q&A)", "2022-08", 300, 0, 0.50, 0.50, ""]
+  - [news, "https://newsdaily.example/hi/rbi-alert-list", "आरबीआई ने अनधिकृत प्लेटफॉर्म्स की सूची जारी की", "2022-09", 500, 0, 0.75, 0.55, "RBI alert list"]
+"regulation:generic":
+  - [regulator, "https://regulator-mirror.example/faq-forex", "FAQs on forex transactions (mirror)", "2022-09", 3000, 1, 0.95, 0.70, "authorised persons | ETPs | FEMA | alert list"]
+  - [article, "https://moneyguide.example/is-forex-trading-legal-in-india", "Is Forex Trading Legal in India? Complete Guide", "2025-03", 2100, 1, 0.75, 0.85, "FEMA | RBI alert list | currency derivatives | NSE | report"]
+  - [article, "https://brokerblog.example/forex-legal-india", "Forex trading legality in India explained", "2024-10", 1600, 1, 0.70, 0.80, "legal pairs | penalties | exchanges"]
+  - [news, "https://newsdaily.example/rbi-alert-list-update", "RBI updates alert list of unauthorised forex platforms", "2025-11", 700, 0, 0.85, 0.60, ""]
+  - [forum, "https://traderforum.example/t/is-forex-legal", "Is forex legal in India? thread", "2023-05", 400, 0, 0.35, 0.50, ""]
+"regulation:exness":
+  - [article, "https://brokerblog.example/is-exness-legal-in-india", "Is Exness legal in India?", "2024-04", 1200, 1, 0.60, 0.80, "regulation | india | alert list"]
+  - [forum, "https://traderforum.example/t/exness-legal", "Exness legal in India?", "2023-09", 350, 0, 0.35, 0.60, ""]
+  - [article, "https://moneyguide.example/is-forex-trading-legal-in-india", "Is Forex Trading Legal in India? Complete Guide", "2025-03", 2100, 1, 0.75, 0.55, "FEMA | RBI alert list"]
+"withdrawal:generic":
+  - [forum, "https://traderforum.example/t/withdrawal-stuck", "Withdrawal stuck for 10 days??", "2024-06", 380, 0, 0.35, 0.55, ""]
+  - [video, "https://videos.example/watch/forex-withdraw-hindi", "Forex broker se paise kaise nikale (video)", "2023-03", 150, 0, 0.50, 0.60, ""]
+  - [qa, "https://qa.example/q/forex-withdrawal-time", "How long does a forex withdrawal take?", "2022-12", 250, 0, 0.50, 0.50, ""]
+  - [article, "https://brokerpromo.example/withdraw-instantly", "Instant withdrawals - join now", "2024-02", 500, 0, 0.30, 0.30, "bonus | instant"]
+  - [article, "https://fxhelp.example/withdrawal-guide", "Forex withdrawal guide", "2023-01", 800, 0, 0.45, 0.65, "methods | time"]
+  - [social, "https://social.example/p/withdrawal-proof", "Withdrawal proof 💰 (social post)", "2025-01", 60, 0, 0.30, 0.20, ""]
+"withdrawal:exness":
+  - [broker_official, "https://broker-official.example/exness/withdrawals", "Withdrawals - help centre (simulated)", "2025-05", 900, 1, 0.80, 0.85, "methods | processing time | verification"]
+  - [forum, "https://traderforum.example/t/withdrawal-stuck", "Withdrawal stuck for 10 days??", "2024-06", 380, 0, 0.35, 0.60, ""]
+  - [video, "https://videos.example/watch/forex-withdraw-hindi", "Forex broker se paise kaise nikale (video)", "2023-03", 150, 0, 0.50, 0.55, ""]
+  - [article, "https://fxhelp.example/withdrawal-guide", "Forex withdrawal guide", "2023-01", 800, 0, 0.45, 0.60, "methods | time"]
+"review:exness":
+  - [directory, "https://brokerdirectory.example/exness", "Exness review (directory)", "2025-08", 2500, 1, 0.80, 0.85, "regulation | fees | platforms"]
+  - [article, "https://reviewsite.example/exness-review", "Exness review 2025", "2025-02", 1800, 1, 0.70, 0.80, "pros | cons | fees"]
+  - [forum, "https://traderforum.example/t/exness-experience", "Exness experience?", "2024-03", 300, 0, 0.35, 0.50, ""]
+"login:exness":
+  - [broker_official, "https://broker-official.example/exness/login-help", "Can't sign in? (simulated help page)", "2024-02", 350, 0, 0.75, 0.70, "reset password"]
+  - [forum, "https://traderforum.example/t/exness-login-issue", "Login not working today", "2025-09", 120, 0, 0.35, 0.55, ""]
+  - [social, "https://social.example/p/exness-down", "Is exness down? (social)", "2025-09", 40, 0, 0.30, 0.40, ""]
+  - [video, "https://videos.example/watch/exness-login", "Exness login problem solved (video)", "2023-07", 100, 0, 0.45, 0.50, ""]
+  - [qa, "https://qa.example/q/exness-2fa", "Lost 2FA device, what to do?", "2022-05", 200, 0, 0.45, 0.45, ""]
+"comparison:exness+xm":
+  - [article, "https://reviewsite.example/exness-vs-xm", "Exness vs XM: which is better?", "2024-01", 1500, 0, 0.65, 0.75, "spreads | bonus | verdict"]
+  - [directory, "https://brokerdirectory.example/compare/exness-xm", "Compare Exness and XM", "2025-06", 700, 0, 0.75, 0.70, "table"]
+  - [forum, "https://traderforum.example/t/exness-or-xm", "Exness or XM for Indians?", "2024-08", 400, 0, 0.35, 0.60, ""]
+  - [video, "https://videos.example/watch/exness-vs-xm", "Exness vs XM (video)", "2023-10", 100, 0, 0.45, 0.55, ""]
+  - [article, "https://brokerpromo.example/xm-best", "XM is the best broker - claim bonus", "2024-05", 500, 0, 0.30, 0.40, "bonus"]
+"bonus:exness":
+  - [article, "https://brokerpromo.example/exness-bonus", "Exness bonus codes", "2025-04", 400, 0, 0.30, 0.70, ""]
+  - [broker_official, "https://broker-official.example/exness/promotions", "Promotions (simulated)", "2025-01", 300, 0, 0.75, 0.70, ""]
+"alternative:octafx":
+  - [news, "https://newsdaily.example/ed-octafx-attachment", "ED attaches assets in OctaFX probe", "2025-10", 600, 0, 0.85, 0.40, ""]
+  - [article, "https://brokerpromo.example/octafx-alternatives", "Top 5 OctaFX alternatives (bonus inside)", "2024-02", 900, 0, 0.30, 0.55, "bonus | top 5"]
+  - [forum, "https://traderforum.example/t/octafx-gone-what-now", "OctaFX gone - what now?", "2025-10", 300, 0, 0.35, 0.65, ""]
+  - [video, "https://videos.example/watch/octafx-alternative", "OctaFX alternative (video)", "2024-01", 90, 0, 0.45, 0.55, ""]
+  - [qa, "https://qa.example/q/octafx-safe", "Is my money safe after OctaFX news?", "2025-10", 200, 0, 0.45, 0.50, ""]
+"news:octafx":
+  - [news, "https://newsdaily.example/ed-octafx-attachment", "ED attaches assets in OctaFX probe", "2025-10", 600, 0, 0.90, 0.85, ""]
+  - [news, "https://businesswire.example/octafx-probe", "OctaFX money-laundering probe: what we know", "2025-10", 900, 0, 0.90, 0.85, ""]
+  - [news, "https://newsdaily.example/ed-octafx-yacht", "Yacht, villas attached in Spain", "2025-07", 500, 0, 0.90, 0.75, ""]
+  - [news, "https://marketsnews.example/octa-responds", "Octa responds to allegations", "2025-07", 400, 0, 0.80, 0.70, ""]
+"fees:generic|hi":
+  - [article, "https://hindifinance.example/spread-kya-hai", "स्प्रेड क्या है (शेयर बाज़ार)", "2021-09", 700, 0, 0.45, 0.45, "bid ask"]
+  - [video, "https://videos.example/watch/spread-hindi", "Forex spread explained in Hindi (video)", "2022-04", 100, 0, 0.50, 0.55, ""]
+  - [forum, "https://traderforum.example/t/spread-hindi", "स्प्रेड और कमीशन में अंतर?", "2023-06", 250, 0, 0.35, 0.60, ""]
+  - [article, "https://brokerpromo.example/hi/zero-spread", "जीरो स्प्रेड अकाउंट - अभी जुड़ें", "2024-03", 400, 0, 0.30, 0.30, "offer"]
+  - [qa, "https://qa.example/q/forex-spread-hindi", "फॉरेक्स में स्प्रेड क्यों लगता है?", "2022-02", 200, 0, 0.45, 0.55, ""]
+"fees:generic":
+  - [article, "https://moneyguide.example/forex-spread", "What is a spread in forex?", "2024-09", 1500, 1, 0.80, 0.85, "spread | pips | commission | swap"]
+  - [article, "https://fxhelp.example/trading-costs", "Forex trading costs explained", "2023-02", 1100, 1, 0.55, 0.80, "spread | swap"]
+  - [video, "https://videos.example/watch/spread-hindi", "Forex spread explained in Hindi (video)", "2022-04", 100, 0, 0.50, 0.55, ""]
+"fees:exness":
+  - [broker_official, "https://broker-official.example/exness/spreads", "Spreads (simulated)", "2025-06", 600, 0, 0.80, 0.85, "account types"]
+  - [article, "https://reviewsite.example/exness-spreads", "Exness spreads review", "2024-11", 1000, 0, 0.65, 0.80, ""]
+  - [video, "https://videos.example/watch/spread-hindi", "Forex spread explained in Hindi (video)", "2022-04", 100, 0, 0.50, 0.40, ""]
+"leverage:generic":
+  - [article, "https://moneyguide.example/forex-leverage", "Forex leverage explained", "2024-07", 1700, 1, 0.80, 0.85, "margin | margin call | risk"]
+  - [regulator, "https://regulator-mirror.example/cfd-leverage", "Leverage limits for retail clients", "2018-03", 1200, 0, 0.95, 0.60, ""]
+"default":
+  - [article, "https://moneyguide.example/forex-guide", "Forex guide", "2024-01", 1500, 1, 0.70, 0.50, ""]
+  - [forum, "https://traderforum.example/t/general", "General discussion", "2023-01", 300, 0, 0.35, 0.40, ""]
+  - [video, "https://videos.example/watch/general", "Forex basics (video)", "2022-01", 100, 0, 0.45, 0.40, ""]
