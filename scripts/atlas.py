@@ -35,7 +35,7 @@ def _spawn(name: str, cmd: list[str], cwd: Path, env: dict[str, str] | None = No
     kwargs: dict = {"cwd": cwd, "stdin": subprocess.DEVNULL, "stdout": open(LOGS / f"{name}.log", "ab"),
                     "stderr": subprocess.STDOUT, "env": {**os.environ, "PYTHONUTF8": "1", **(env or {})}}
     if devstack.IS_WIN:
-        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS | subprocess.CREATE_NO_WINDOW
+        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW  # own hidden console: immune to our console's Ctrl+C/close
     else:
         kwargs["start_new_session"] = True
     return subprocess.Popen(cmd, **kwargs).pid

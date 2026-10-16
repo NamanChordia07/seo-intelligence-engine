@@ -58,7 +58,7 @@ def detached(cmd: list[str], log: Path) -> None:
     kwargs: dict = {"stdin": subprocess.DEVNULL, "stdout": open(log, "ab"), "stderr": subprocess.STDOUT}
     if IS_WIN:
         kwargs["creationflags"] = (
-            subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS | subprocess.CREATE_NO_WINDOW
+            subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW  # own hidden console: immune to our console's Ctrl+C/close
         )
     else:
         kwargs["start_new_session"] = True
@@ -78,6 +78,8 @@ def wait_port(port: int, label: str, timeout: float = 60) -> None:
 def postgres_up() -> None:
     if port_open(PG_PORT):
         print(f"[ok] postgres already on :{PG_PORT}")
+        wait_pg_ready()
+        ensure_databases()
         return
     if not (PGDATA / "PG_VERSION").exists():
         PGDATA.mkdir(parents=True, exist_ok=True)
@@ -92,7 +94,22 @@ def postgres_up() -> None:
         DATA / "postgres.log",
     )
     wait_port(PG_PORT, "postgres")
-    time.sleep(1.0)
+    wait_pg_ready()
+    ensure_databases()
+
+
+def wait_pg_ready(timeout: float = 60) -> None:
+    """Port open != ready (recovery may still be running). Poll pg_isready."""
+    start = time.time()
+    while time.time() - start < timeout:
+        ok = subprocess.run([str(pg_bin("pg_isready")), "-h", "127.0.0.1", "-p", str(PG_PORT), "-U", "atlas", "-d", "postgres"], capture_output=True)
+        if ok.returncode == 0:
+            return
+        time.sleep(0.5)
+    raise SystemExit("[fail] postgres did not become ready")
+
+
+def ensure_databases() -> None:
     for db in ("atlas", "atlas_test"):
         exists = subprocess.run(
             [str(pg_bin("psql")), "-h", "127.0.0.1", "-p", str(PG_PORT), "-U", "atlas", "-d", "postgres",
