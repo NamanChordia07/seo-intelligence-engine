@@ -37,7 +37,7 @@ from packages.persistence.seed import article_tokens
 from packages.providers.base import GenerationContext, LLMOutputError, ProviderUnavailable
 from packages.providers.fixtures import content_library
 from packages.providers.llm import DemoLLMProvider, get_llm_provider
-from workers.research.activities import build_bundle
+from workers.research.activities import build_bundle, news_evidence
 
 
 def _uuid(v: str | uuid.UUID) -> uuid.UUID:
@@ -128,7 +128,7 @@ def store_article(
 ) -> Article:
     settings = get_settings()
     embedder = get_embedder()
-    evidence_items = {i.key: i for i in build_bundle(brief).items}
+    evidence_items = {i.key: i for i in build_bundle(brief, news_evidence(s, project.id, brief)).items}
     article_id = uuid.uuid4()
     targets = {t.intent_key: t for t in link_targets(s, project.id)}
 
@@ -257,7 +257,7 @@ def generate_article(article_run_id: str, opportunity_id: str) -> dict[str, Any]
             project = s.get(Project, opp.project_id)
             brief = ContentBrief.model_validate(
                 s.scalar(select(ContentBriefRow).where(ContentBriefRow.opportunity_id == opp.id)).brief)
-            bundle = build_bundle(brief)
+            bundle = build_bundle(brief, news_evidence(s, project.id, brief))
             ctx = GenerationContext(
                 evidence=bundle.items,
                 internal_link_targets=[{"intent_key": t.intent_key, "title": t.title, "slug": t.slug}

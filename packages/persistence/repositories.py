@@ -140,7 +140,7 @@ def count(session: Session, model: Any, *where: Any) -> int:
 PROJECT_TABLES_IN_DELETE_ORDER = [
     "content_ledger", "audit_events", "internal_links", "compliance_decisions", "evidence_claims", "article_versions",
     "intent_reservations", "content_briefs", "content_plans", "opportunities", "serp_snapshots", "keyword_candidates",
-    "intent_clusters", "search_observations", "evidence_sources", "articles", "workflow_steps", "workflow_runs",
+    "intent_clusters", "search_observations", "evidence_sources", "articles", "broker_demand_snapshots", "workflow_steps", "workflow_runs",
 ]
 
 

@@ -29,6 +29,11 @@ BROKERS: dict[str, list[str]] = {
     "fbs": ["fbs"],
     "olymp-trade": ["olymp trade", "olymptrade"],
     "iq-option": ["iq option", "iqoption"],
+    "quotex": ["quotex", "क्वोटेक्स"],
+    "binomo": ["binomo", "बिनोमो"],
+    "hfm": ["hfm", "hotforex", "hf markets"],
+    "fxtm": ["fxtm", "forextime"],
+    "avatrade": ["avatrade", "ava trade"],
 }
 BROKER_NAMES = {
     "exness": "Exness",
@@ -39,6 +44,11 @@ BROKER_NAMES = {
     "fbs": "FBS",
     "olymp-trade": "Olymp Trade",
     "iq-option": "IQ Option",
+    "quotex": "Quotex",
+    "binomo": "Binomo",
+    "hfm": "HFM",
+    "fxtm": "FXTM",
+    "avatrade": "AvaTrade",
 }
 
 # ---------------------------------------------------------------------------- themes

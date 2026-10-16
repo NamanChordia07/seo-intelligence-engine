@@ -91,6 +91,26 @@ class Entity(Timestamped, Base):
     tracked: Mapped[bool] = mapped_column(Boolean, default=True)
 
 
+class BrokerDemandSnapshot(Base):
+    """Per-run broker demand index (PROXY live / SIMULATED demo). Answers 'which brokers matter today?'."""
+
+    __tablename__ = "broker_demand_snapshots"
+    __table_args__ = (UniqueConstraint("run_id", "entity_key", name="uq_broker_demand_run_entity"),
+                      Index("ix_broker_demand_project_date", "project_id", "captured_on"))
+    id: Mapped[uuid.UUID] = pk()
+    project_id: Mapped[uuid.UUID] = fk("projects.id")
+    run_id: Mapped[uuid.UUID] = fk("workflow_runs.id")
+    captured_on: Mapped[str] = mapped_column(String(10))
+    entity_key: Mapped[str] = mapped_column(String(80))
+    name: Mapped[str] = mapped_column(String(200))
+    demand_index: Mapped[float] = mapped_column(Float)
+    rank: Mapped[int] = mapped_column(Integer)
+    tracked: Mapped[bool] = mapped_column(Boolean, default=True)
+    source_type: Mapped[str] = mapped_column(String(20))
+    components: Mapped[dict[str, Any]] = mapped_column(default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 # --------------------------------------------------------------------------- workflow + audit
 class WorkflowRun(Timestamped, Base):
     __tablename__ = "workflow_runs"

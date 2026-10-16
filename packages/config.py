@@ -27,6 +27,13 @@ class Settings(BaseSettings):
     provider_mode: str = "demo"  # demo | hybrid | live
     searxng_url: str = ""
     live_research: bool = False
+    autocomplete_budget: int = 40  # live runs: public autocomplete calls per day (seeds rotate across days)
+    live_news: bool = True  # live runs: Google Trends India RSS + Google News RSS
+    live_broker_demand: bool = True  # live runs: measure the broker demand index before discovery
+
+    # Daily schedule (Temporal Schedule). Cron is evaluated in schedule_timezone.
+    schedule_cron: str = "0 6 * * *"
+    schedule_timezone: str = "Asia/Kolkata"
 
     llm_provider: str = "demo"  # demo | ollama | openai
     llm_base_url: str = "http://127.0.0.1:11434/v1"
@@ -35,6 +42,7 @@ class Settings(BaseSettings):
     llm_advisory_review: bool = False
 
     output_dir: str = "outputs/articles"
+    site_dir: str = "outputs/site"  # static, publish-ready HTML build (eligible pages only)
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
     # Demo calendar: simulated Day 1 = demo_base_date
@@ -46,6 +54,11 @@ class Settings(BaseSettings):
     @property
     def output_path(self) -> Path:
         p = Path(self.output_dir)
+        return p if p.is_absolute() else ROOT_DIR / p
+
+    @property
+    def site_path(self) -> Path:
+        p = Path(self.site_dir)
         return p if p.is_absolute() else ROOT_DIR / p
 
     @property

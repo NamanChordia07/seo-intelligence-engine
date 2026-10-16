@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
 
 from apps.api.routes import content, intelligence, operations
@@ -20,6 +21,7 @@ from packages.config import get_settings
 from packages.persistence.db import ping, session_scope
 from packages.persistence.repositories import get_default_project
 from packages.telemetry.logging import configure_logging, get_logger
+from workers.publishing.activities import PREVIEW_DIR
 from workflows import engine
 
 VERSION = "0.1.0"
@@ -86,5 +88,7 @@ async def health() -> Health:
 
 
 app.include_router(intelligence.router)
+PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/site", StaticFiles(directory=PREVIEW_DIR, html=True), name="site-preview")  # static build preview
 app.include_router(content.router)
 app.include_router(operations.router)

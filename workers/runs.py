@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from temporalio import activity
 
+from packages.config import get_settings
 from packages.persistence.db import session_scope
 from packages.persistence.models import Article, OpportunityRow, WorkflowRun
-from packages.persistence.repositories import audit, get_run, mark_run
+from packages.persistence.repositories import audit, get_default_project, get_run, mark_run
 from packages.providers.fixtures import day_config
 
 
@@ -77,3 +81,37 @@ def create_day_run(parent_run_id: str, sim_day: int) -> str:
         s.add(child)
         s.flush()
         return str(child.id)
+
+
+def india_today() -> str:
+    """Live runs plan for the calendar day in the target market (India), not the server's timezone."""
+    return datetime.now(ZoneInfo(get_settings().schedule_timezone)).date().isoformat()
+
+
+@activity.defn(name="create_live_run")
+def create_live_run(trigger: str = "schedule", force: bool = False, orchestrator: str = "temporal") -> dict[str, Any]:
+    """Create today's LIVE daily run (sim_day NULL, real public providers). One per India calendar day unless
+    forced; the partial unique index `uq_active_live_run` guards against two concurrent live runs."""
+    plan_date = india_today()
+    with session_scope() as s:
+        project = get_default_project(s)
+        done = s.scalar(select(WorkflowRun).where(
+            WorkflowRun.project_id == project.id, WorkflowRun.kind == "DAILY_INTELLIGENCE", WorkflowRun.sim_day.is_(None),
+            WorkflowRun.plan_date == plan_date, WorkflowRun.status.in_(["QUEUED", "RUNNING", "COMPLETED", "PARTIAL"]))
+            .order_by(WorkflowRun.created_at.desc()))
+        if done is not None and (not force or done.status in ("QUEUED", "RUNNING")):
+            return {"run_id": None, "existing_run_id": str(done.id), "plan_date": plan_date,
+                    "skipped": f"live run for {plan_date} already {done.status.lower()}"}
+        project_id = project.id
+    try:
+        with session_scope() as s:
+            run = WorkflowRun(project_id=project_id, kind="DAILY_INTELLIGENCE", sim_day=None, plan_date=plan_date,
+                              status="QUEUED", orchestrator=orchestrator, provider_mode="live", trigger=trigger,
+                              stats={"rerun": force, "llm_provider": get_settings().llm_provider})
+            s.add(run)
+            s.flush()
+            audit(s, project_id, "RUN_QUEUED", f"Live daily run for {plan_date} queued ({trigger}, {orchestrator})",
+                  run_id=run.id)
+            return {"run_id": str(run.id), "plan_date": plan_date}
+    except IntegrityError:
+        return {"run_id": None, "plan_date": plan_date, "skipped": "another live run for today is active (database guard)"}

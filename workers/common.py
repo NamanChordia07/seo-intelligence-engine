@@ -13,6 +13,7 @@ from packages.contracts.enums import AuthorizationStatus
 from packages.persistence.models import Project, WorkflowRun
 from packages.providers.fixtures import day_config
 from packages.providers.live import GoogleAutocompleteProvider, SafeHttpExtractor, SearxngSerpProvider
+from packages.providers.signals import GoogleNewsRssProvider, GoogleTrendsRssProvider
 from packages.providers.simulated import (
     FixtureEvidenceProvider,
     FixtureSerpProvider,
@@ -55,11 +56,15 @@ def run_context(session: Session, run: WorkflowRun) -> RunContext:
 def suggestion_providers(ctx: RunContext) -> list[Any]:
     if ctx.is_simulated:
         return [SimulatedSuggestionProvider()]
-    return [GoogleAutocompleteProvider()]
+    return [GoogleAutocompleteProvider(budget=get_settings().autocomplete_budget)]
 
 
-def trend_providers(ctx: RunContext) -> list[Any]:
-    return [SimulatedTrendProvider()] if ctx.is_simulated else []
+def trend_providers(ctx: RunContext, brokers: dict[str, str] | None = None) -> list[Any]:
+    if ctx.is_simulated:
+        return [SimulatedTrendProvider()]
+    if not get_settings().live_news:
+        return []
+    return [GoogleTrendsRssProvider(), GoogleNewsRssProvider(brokers or {})]
 
 
 def serp_provider(ctx: RunContext) -> Any:

@@ -23,8 +23,9 @@ from workers.content.activities import (
     generate_redteam,
     plan_brief,
 )
-from workers.discovery.activities import discover, normalize
+from workers.discovery.activities import discover, normalize, track_brokers
 from workers.optimization.activities import score_and_select
+from workers.publishing.activities import build_site_activity
 from workers.research.activities import analyze_serps, research_evidence
 from workers.runs import create_day_run, fail_run, finalize_run, start_run
 
@@ -49,6 +50,7 @@ def run_article_inline(run_id: str, opportunity_id: str) -> dict[str, Any]:
 def run_daily_inline(run_id: str) -> dict[str, Any]:
     try:
         started = start_run(run_id)
+        track_brokers(run_id)
         discover(run_id)
         normalize(run_id)
         analyze_serps(run_id)
@@ -63,6 +65,11 @@ def run_daily_inline(run_id: str) -> dict[str, Any]:
         if started.get("redteam"):
             red = generate_redteam(run_id)
             validate_article(run_id, red["article_id"])
+        try:
+            build_site_activity(run_id)
+        except Exception as exc:  # noqa: BLE001 - a failed site build must not fail the day's content
+            log.exception("site build failed", extra={"run_id": run_id})
+            failures.append(f"build_site: {type(exc).__name__}: {exc}")
         return finalize_run(run_id, failures)
     except Exception as exc:
         log.exception("daily run failed", extra={"run_id": run_id})

@@ -75,6 +75,22 @@ async def start_day(sim_day: int, *, force: bool = False, wait: bool = False, tr
     return {"run_id": run_id, "orchestrator": orchestrator, "reason": why}
 
 
+async def start_live(*, force: bool = False, wait: bool = False, trigger: str = "api") -> dict[str, Any]:
+    """Today's LIVE run: real public signals (autocomplete, Google Trends India, Google News), real calendar date."""
+    from workers.runs import create_live_run
+
+    orchestrator, why = ("inline", "synchronous request") if wait else await engine.choose_orchestrator()
+    created = create_live_run(trigger, force, orchestrator)
+    if not created.get("run_id"):
+        raise Conflict(created.get("skipped", "live run not created") + " - use force=true to run again today")
+    run_id = created["run_id"]
+    with session_scope() as s:
+        run = s.get(WorkflowRun, uuid.UUID(run_id))
+        run.stats = {**(run.stats or {}), "orchestrator_reason": why}
+    await dispatch("DailyIntelligenceWorkflow", [run_id], run_id, orchestrator, wait, engine.run_daily_inline, run_id)
+    return {"run_id": run_id, "plan_date": created["plan_date"], "orchestrator": orchestrator, "reason": why}
+
+
 async def start_all(*, wait: bool = False) -> dict[str, Any]:
     with session_scope() as s:
         project = get_default_project(s)
@@ -123,6 +139,10 @@ def reset_demo() -> dict[str, Any]:
         settings["india_authorization_status"] = "UNKNOWN"
         project.settings = settings
         audit(s, project.id, "DEMO_RESET", "Demo data reset; simulated inventory re-seeded", actor="demo-user")
+    from workers.publishing.activities import PREVIEW_DIR
+
+    for site in (get_settings().site_path, PREVIEW_DIR):
+        shutil.rmtree(site, ignore_errors=True)
     out = get_settings().output_path
     if out.exists():
         for child in out.iterdir():

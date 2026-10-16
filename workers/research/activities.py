@@ -7,12 +7,14 @@ import uuid
 from typing import Any
 
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 from temporalio import activity
 
 from packages.config import get_settings
-from packages.contracts.enums import Language, Theme, VerificationStatus
-from packages.contracts.flow import ContentBrief, EvidenceBundle, EvidenceItem
+from packages.contracts.enums import Language, RetrievalMode, SourceClass, SourceType, Theme, VerificationStatus
+from packages.contracts.flow import ContentBrief, EvidenceBundle, EvidenceClaimItem, EvidenceItem
 from packages.domain.briefs import THEME_EVIDENCE_TAGS
+from packages.domain.language import analyze_query
 from packages.domain.serp import analyze_serp
 from packages.persistence.db import session_scope
 from packages.persistence.models import (
@@ -73,10 +75,38 @@ def _worst_status(item: EvidenceItem) -> VerificationStatus:
     return min((c.verification_status for c in item.claims), key=order.index)
 
 
-def build_bundle(brief: ContentBrief) -> EvidenceBundle:
+def news_evidence(s: Session, project_id: uuid.UUID, brief: ContentBrief, limit: int = 3) -> list[EvidenceItem]:
+    """Live runs: today's real headlines (Google News / Trends RSS) observed for this intent, as SECONDARY_MEDIA
+    evidence. Only the *existence* of coverage is established; what the article says stays UNVERIFIED."""
+    rows = s.scalars(select(SearchObservationRow).where(
+        SearchObservationRow.project_id == project_id, SearchObservationRow.sim_day.is_(None),
+        SearchObservationRow.is_news.is_(True)).order_by(SearchObservationRow.observed_at.desc()).limit(200))
+    for o in rows:
+        if analyze_query(o.query).intent_key != brief.intent_key:
+            continue
+        heads = (o.raw or {}).get("headlines") or (o.raw or {}).get("news") or []
+        items = []
+        for h in heads[:limit]:
+            if not h.get("url") or not h.get("title"):
+                continue
+            key = "news-" + hashlib.sha1(h["url"].encode()).hexdigest()[:10]  # noqa: S324 - id, not security
+            items.append(EvidenceItem(
+                key=key, url=h["url"], title=h["title"][:300], publisher=h.get("source") or "News publisher",
+                source_type=SourceType.REAL_PUBLIC, source_class=SourceClass.SECONDARY_MEDIA,
+                retrieval_mode=RetrievalMode.LIVE_FETCH, retrieved_at=o.observed_at, published_at=o.observed_at.date().isoformat(),
+                snippet=h["title"][:300], language=o.language,
+                claims=[EvidenceClaimItem(key=f"{key}-c1", claim=f"{h.get('source') or 'A publisher'} reported: {h['title'][:200]}",
+                                          claim_type="media_report", confidence=0.5,
+                                          verification_status=VerificationStatus.UNVERIFIED)],
+                tags=["news", *brief.entity_keys]))
+        return items
+    return []
+
+
+def build_bundle(brief: ContentBrief, extra: list[EvidenceItem] | None = None) -> EvidenceBundle:
     provider = evidence_provider()
     tags = THEME_EVIDENCE_TAGS.get(brief.theme, [brief.theme.value])
-    items = provider.find(tags, brief.entity_keys)
+    items = provider.find(tags, brief.entity_keys) + list(extra or [])
     gaps: list[str] = []
     if brief.theme == Theme.COMPARISON:
         for ent in brief.entity_keys:
@@ -100,7 +130,7 @@ def research_evidence(article_run_id: str, opportunity_id: str) -> dict[str, Any
             opp = s.get(OpportunityRow, uuid.UUID(opportunity_id))
             brief_row = s.scalar(select(ContentBriefRow).where(ContentBriefRow.opportunity_id == opp.id))
             brief = ContentBrief.model_validate(brief_row.brief)
-            bundle = build_bundle(brief)
+            bundle = build_bundle(brief, news_evidence(s, opp.project_id, brief))
             live_checked = 0
             for item in bundle.items:
                 src = s.scalar(select(EvidenceSource).where(EvidenceSource.project_id == opp.project_id, EvidenceSource.url == item.url))

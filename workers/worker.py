@@ -22,20 +22,22 @@ from workers.content.activities import (
     generate_redteam,
     plan_brief,
 )
-from workers.discovery.activities import discover, normalize
+from workers.discovery.activities import discover, normalize, track_brokers
 from workers.optimization.activities import score_and_select
+from workers.publishing.activities import build_site_activity
 from workers.research.activities import analyze_serps, research_evidence
-from workers.runs import create_day_run, fail_run, finalize_run, start_run
+from workers.runs import create_day_run, create_live_run, fail_run, finalize_run, start_run
 from workflows.article_generation import ArticleGenerationWorkflow
 from workflows.daily_intelligence import DailyIntelligenceWorkflow
 from workflows.demo_simulation import DemoSimulationWorkflow
+from workflows.scheduled_daily import ScheduledDailyWorkflow
 
 ACTIVITIES = [
-    start_run, finalize_run, fail_run, create_day_run, discover, normalize, analyze_serps, score_and_select,
+    start_run, finalize_run, fail_run, create_day_run, create_live_run, track_brokers, discover, normalize, analyze_serps, score_and_select,
     create_article_run, plan_brief, research_evidence, generate_article, validate_article, complete_article_run,
-    generate_redteam,
+    generate_redteam, build_site_activity,
 ]
-WORKFLOWS = [DailyIntelligenceWorkflow, ArticleGenerationWorkflow, DemoSimulationWorkflow]
+WORKFLOWS = [DailyIntelligenceWorkflow, ArticleGenerationWorkflow, DemoSimulationWorkflow, ScheduledDailyWorkflow]
 
 
 async def main() -> None:

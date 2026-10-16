@@ -3,7 +3,14 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
+_dotenv = Path(__file__).resolve().parents[1] / ".env"
+if _dotenv.exists():
+    for _line in _dotenv.read_text(encoding="utf-8").splitlines():
+        _k, _sep, _v = _line.strip().partition("=")
+        if _sep and _k == "ATLAS_TEST_DATABASE_URL":
+            os.environ.setdefault(_k, _v.strip())
 os.environ.setdefault("ATLAS_TEST_DATABASE_URL", "postgresql+psycopg://atlas@127.0.0.1:5433/atlas_test")
 os.environ["ATLAS_DATABASE_URL"] = os.environ["ATLAS_TEST_DATABASE_URL"]
 os.environ["ATLAS_ORCHESTRATOR"] = "inline"

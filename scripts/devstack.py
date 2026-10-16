@@ -30,6 +30,20 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_dotenv() -> None:
+    """Read ATLAS_* values from .env so a custom ATLAS_PG_PORT applies to the launcher too."""
+    env = ROOT / ".env"
+    if not env.exists():
+        return
+    for line in env.read_text(encoding="utf-8").splitlines():
+        key, sep, value = line.strip().partition("=")
+        if sep and key.startswith("ATLAS_") and not key.startswith("#"):
+            os.environ.setdefault(key, value.strip())
+
+
+_load_dotenv()
 DATA = ROOT / ".data"
 PGDATA = DATA / "postgres"
 BIN = DATA / "bin"
@@ -77,6 +91,9 @@ def wait_port(port: int, label: str, timeout: float = 60) -> None:
 
 def postgres_up() -> None:
     if port_open(PG_PORT):
+        if not (PGDATA / "postmaster.pid").exists():
+            raise SystemExit(f"[fail] port {PG_PORT} is held by another PostgreSQL/server, not ATLAS's. "
+                             f"Set ATLAS_PG_PORT (and the port in ATLAS_DATABASE_URL / ATLAS_TEST_DATABASE_URL) in .env")
         print(f"[ok] postgres already on :{PG_PORT}")
         wait_pg_ready()
         ensure_databases()

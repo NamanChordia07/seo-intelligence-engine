@@ -99,6 +99,30 @@ async def demo_run_day(day: int, force: bool = False, wait: bool = False) -> dic
     return await services.start_day(day, force=force, wait=wait, trigger="demo_button")
 
 
+@router.post("/runs/live", status_code=202)
+async def create_live_run(force: bool = False, wait: bool = False) -> dict[str, Any]:
+    """Run today's LIVE pipeline (real public signals; India calendar date). One per day unless force=true."""
+    return await services.start_live(force=force, wait=wait)
+
+
+@router.post("/site/build")
+async def site_build() -> dict[str, Any]:
+    """Rebuild the static site now (also runs automatically at the end of every daily run)."""
+    from workers.publishing.activities import publish_site
+
+    return await run_in_threadpool(publish_site, None, "demo-user")
+
+
+@router.get("/site/report")
+def site_report() -> dict[str, Any]:
+    from workers.publishing.activities import latest_report
+
+    report = latest_report()
+    if report is None:
+        raise LookupError("No site build yet - run a day or POST /api/v1/site/build")
+    return {**report, "preview_url": "/site/"}
+
+
 @router.post("/demo/run-all", status_code=202)
 async def demo_run_all(wait: bool = False) -> dict[str, Any]:
     return await services.start_all(wait=wait)

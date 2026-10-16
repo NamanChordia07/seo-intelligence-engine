@@ -12,6 +12,7 @@ from __future__ import annotations
 import ipaddress
 import re
 import socket
+import time
 from datetime import UTC, datetime
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
@@ -67,8 +68,9 @@ class GoogleAutocompleteProvider:
     name = "google_autocomplete"
     ENDPOINT = "https://suggestqueries.google.com/complete/search"
 
-    def __init__(self, budget: int = 12):
+    def __init__(self, budget: int = 12, pause: float = 0.25):
         self.budget = budget
+        self.pause = pause
 
     def suggest(self, seed: SeedQuery, sim_day: int | None) -> list[SearchObservation]:
         if self.budget <= 0:
@@ -86,15 +88,23 @@ class GoogleAutocompleteProvider:
             raise ProviderUnavailable(f"autocomplete unavailable: {exc}") from exc
         now = datetime.now(UTC)
         out = []
-        for s in (data[1] if isinstance(data, list) and len(data) > 1 else [])[:8]:
+        for pos, s in enumerate((data[1] if isinstance(data, list) and len(data) > 1 else [])[:8]):
             a = analyze_query(s)
             out.append(SearchObservation(
                 query=s[:300], language=a.language, locale=a.locale, source=self.name,
-                source_type=SourceType.REAL_PUBLIC, confidence=0.5, observed_at=now, demand_proxy=None,
+                source_type=SourceType.REAL_PUBLIC, confidence=0.5, observed_at=now, demand_proxy=position_proxy(pos),
                 trend_velocity=None, seed=seed.query, entity_keys=a.entity_keys,
-                raw={"note": "Presence in public autocomplete; no volume data"},
+                raw={"note": "Presence in public autocomplete; no volume data", "position": pos + 1,
+                     "demand_proxy_basis": "autocomplete rank (PROXY)"},
             ))
+        if self.pause:
+            time.sleep(self.pause)
         return out
+
+
+def position_proxy(position: int) -> float:
+    """Autocomplete rank -> weak relative demand PROXY (rank 1 = 70, rank 8 = 35). Never a volume."""
+    return float(max(35, 70 - 5 * position))
 
 
 # --------------------------------------------------------------------------- SERP

@@ -64,12 +64,18 @@ def template_draft(brief: ContentBrief, ctx: GenerationContext) -> LLMArticlePay
 
     Intentionally plain and marked for editing - the compliance gate will route it to REVIEW.
     """
-    cite = f"[[E:{ctx.evidence[0].key}]]" if ctx.evidence else ""
+    def cite(i: int) -> str:
+        return f"[[E:{ctx.evidence[i % len(ctx.evidence)].key}]]" if ctx.evidence else ""
+
     sections = [
         DraftSection(heading=s.heading, level=s.level,
-                     body=f"EDITOR DRAFT - {s.purpose}. Add verified facts from the evidence bundle before publication.{cite}")
-        for s in brief.outline
+                     body=f"EDITOR DRAFT - {s.purpose}. Add verified facts from the evidence bundle before publication.{cite(i)}")
+        for i, s in enumerate(brief.outline)
     ]
+    media = [e for e in ctx.evidence if e.source_class.value == "SECONDARY_MEDIA" and e.retrieval_mode.value == "LIVE_FETCH"]
+    if media:  # news-led: list today's real coverage (reported, not verified) so the editor starts from sources
+        sections.insert(0, DraftSection(heading="What is being reported", level=2, body="\n".join(
+            f"- {e.publisher} reported: \"{e.title}\" (unverified media report) [[E:{e.key}]]" for e in media)))
     return LLMArticlePayload(
         title=brief.recommended_title[:120].ljust(10, "."),
         meta_description=f"Editor draft for '{brief.target_keyword}': {brief.angle}. {brief.audience}."[:165].ljust(50, "."),

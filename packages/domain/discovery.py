@@ -111,3 +111,16 @@ def expand_seeds(brokers: dict[str, str], languages: list[Language] | None = Non
             seen.add(k)
             unique.append(s)
     return unique
+
+
+def rotate_seeds(seeds: list[SeedQuery], budget: int, day_ordinal: int) -> list[SeedQuery]:
+    """Live runs: a daily request budget can't cover every seed, so rotate a window through the broker seeds
+    (different slice each day) while always keeping the broker-agnostic topic seeds."""
+    topics = [s for s in seeds if s.entity_key is None]
+    brokered = [s for s in seeds if s.entity_key is not None]
+    room = max(0, budget - len(topics))
+    if not brokered or room == 0:
+        return topics[:budget]
+    start = (day_ordinal * room) % len(brokered)
+    window = (brokered + brokered)[start:start + min(room, len(brokered))]
+    return topics + window

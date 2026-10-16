@@ -37,7 +37,7 @@ class DailyIntelligenceWorkflow:
         try:
             self.stage = "start"
             started = await workflow.execute_activity("start_run", run_id, start_to_close_timeout=T, retry_policy=RETRY)
-            for stage in ("discover", "normalize", "analyze_serps"):
+            for stage in ("track_brokers", "discover", "normalize", "analyze_serps"):
                 self.stage = stage
                 await workflow.execute_activity(stage, run_id, start_to_close_timeout=T, retry_policy=RETRY)
             self.stage = "score_and_select"
@@ -56,6 +56,11 @@ class DailyIntelligenceWorkflow:
                 red = await workflow.execute_activity("generate_redteam", run_id, start_to_close_timeout=T, retry_policy=RETRY)
                 await workflow.execute_activity("validate_article", args=[run_id, red["article_id"]],
                                                 start_to_close_timeout=T, retry_policy=RETRY)
+            self.stage = "build_site"
+            try:
+                await workflow.execute_activity("build_site", run_id, start_to_close_timeout=T, retry_policy=RETRY)
+            except Exception as exc:  # noqa: BLE001 - a failed site build must not fail the day's content
+                failures.append(f"build_site: {exc}")
             self.stage = "finalize"
             return await workflow.execute_activity("finalize_run", args=[run_id, failures], start_to_close_timeout=T,
                                                    retry_policy=RETRY)

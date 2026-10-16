@@ -129,4 +129,5 @@ class ComplianceCheckIn(BaseModel):
 class SettingsPatch(BaseModel):
     india_authorization_status: Literal["UNKNOWN", "VERIFIED", "NOT_AUTHORIZED"] | None = None
     max_pages_per_day: int | None = Field(default=None, ge=1, le=5)
+    target_platform_url: str | None = Field(default=None, max_length=200, pattern=r"^https://[\w.-]+(/[\w./-]*)?$")
     actor: str = Field(default="demo-user", max_length=80, pattern=r"^[\w .@-]+$")
