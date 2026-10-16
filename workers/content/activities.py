@@ -25,8 +25,8 @@ from packages.persistence.models import (
     ContentBriefRow,
     EvidenceClaim,
     EvidenceSource,
-    InternalLink,
     IntentReservation,
+    InternalLink,
     KeywordCandidateRow,
     OpportunityRow,
     Project,
@@ -206,7 +206,7 @@ def store_article(
 
     # Internal links: inline (resolved placeholders) + related-guide module
     seen: set[uuid.UUID] = set()
-    for intent_key, slug, anchor in rendered.inline_links:
+    for intent_key, _slug, anchor in rendered.inline_links:
         t = targets.get(intent_key)
         if t and t.id not in seen:
             seen.add(t.id)

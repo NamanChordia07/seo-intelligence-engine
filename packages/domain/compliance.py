@@ -120,7 +120,8 @@ AI_CLICHES = re.compile(
     r"in the realm of|tapestry",
     re.IGNORECASE,
 )
-SENTENCE_SPLIT = re.compile(r"(?<=[.!?।])\s+|\n+")
+# Split after terminal punctuation, including when a footnote marker follows it ("...money.[^2] Next")
+SENTENCE_SPLIT = re.compile(r"(?<=[.!?।])\s+|(?<=[.!?।]\[\^\d\])\s+|(?<=[.!?।]\[\^\d\d\])\s+|\n+")
 
 BROKER_ALIASES = sorted({a for aliases in BROKERS.values() for a in aliases if len(a) >= 2}, key=len, reverse=True)
 BROKER_RE = re.compile(r"\b(?:" + "|".join(re.escape(a) for a in BROKER_ALIASES if a.isascii()) + r")\b", re.IGNORECASE)

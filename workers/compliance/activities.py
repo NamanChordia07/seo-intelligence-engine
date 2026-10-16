@@ -104,8 +104,16 @@ def apply_report(s, article: Article, report, *, run_id=None, actor="policy-engi
     )
     s.add(decision)
     article.compliance_status = report.status.value
-    article.publication_eligibility = report.publication_eligibility.value
-    article.status = STATUS_TO_ARTICLE[report.status.value]
+    human = s.scalar(select(ComplianceDecision).where(
+        ComplianceDecision.article_id == article.id, ComplianceDecision.article_version == version.version,
+        ComplianceDecision.decided_by.like("human:%")).order_by(ComplianceDecision.created_at.desc()))
+    if human is not None and report.status.value == "REVIEW":
+        # Human sign-off on this exact version stands while the deterministic outcome is unchanged (REVIEW)
+        article.status = "APPROVED"
+        article.publication_eligibility = human.publication_eligibility
+    else:
+        article.publication_eligibility = report.publication_eligibility.value
+        article.status = STATUS_TO_ARTICLE[report.status.value]
     # Keep the Markdown artifact's frontmatter in sync (metadata only; body unchanged)
     md = set_frontmatter_value(version.markdown, "compliance_status", report.status.value)
     version.markdown = md

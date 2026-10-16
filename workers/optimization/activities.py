@@ -113,6 +113,12 @@ def score_and_select(run_id: str) -> dict[str, Any]:
 
             scored.sort(key=lambda x: -x["score"])
             threshold = settings.selection_threshold
+            # Daily budget: pages already produced for this plan day count against capacity (re-runs can't double-spend)
+            produced_q = select(Article).where(Article.project_id == ctx.project.id, Article.origin == "GENERATED",
+                                               Article.is_test_fixture.is_(False))
+            produced_q = produced_q.where(Article.sim_day == ctx.sim_day) if ctx.sim_day is not None else                 produced_q.where(Article.sim_day.is_(None))
+            already_produced = len(list(s.scalars(produced_q))) if ctx.sim_day is not None else 0
+            capacity = max(0, ctx.max_pages - already_produced)
             selected: list[OpportunityRow] = []
             planned_items: list[InventoryItem] = []
             rows: list[OpportunityRow] = []
@@ -127,10 +133,13 @@ def score_and_select(run_id: str) -> dict[str, Any]:
                     status, reason = DECISION_TO_STATUS[result.decision], result.reason
                 elif c.intent_key in reserved:
                     status, reason = OpportunityStatus.REJECTED, f"Intent '{c.intent_key}' already reserved (previous run)"
-                elif item["score"] < threshold and not (len(selected) < settings.min_pages_per_day and item["score"] >= threshold - 10):
+                elif item["score"] < threshold and not (capacity and len(selected) < settings.min_pages_per_day and item["score"] >= threshold - 10):
                     status, reason = OpportunityStatus.REJECTED, f"Score {item['score']:.1f} below selection threshold {threshold:.0f}"
-                elif len(selected) >= ctx.max_pages:
-                    status, reason = OpportunityStatus.DEFERRED, f"Daily capacity reached ({ctx.max_pages} pages/day) - eligible for a later day"
+                elif len(selected) >= capacity:
+                    status, reason = OpportunityStatus.DEFERRED, (
+                        f"Daily capacity reached ({ctx.max_pages} pages/day"
+                        + (f", {already_produced} already produced for this day" if already_produced else "")
+                        + ") - eligible for a later day")
                 else:
                     status, reason = OpportunityStatus.SELECTED, "Highest-scoring unique intent with no cannibalization conflict"
 
@@ -186,7 +195,7 @@ def score_and_select(run_id: str) -> dict[str, Any]:
             counts: dict[str, int] = {}
             for o in rows:
                 counts[o.status] = counts.get(o.status, 0) + 1
-            d.update(scored=len(rows), selected=[str(o.id) for o in selected], status_counts=counts,
+            d.update(scored=len(rows), selected=[str(o.id) for o in selected], status_counts=counts, capacity=capacity,
                      selected_keywords=[o.keyword for o in selected], threshold=threshold)
             audit(s, ctx.project.id, "CONTENT_PLAN_CREATED",
                   f"Selected {len(selected)} of {len(rows)} opportunities for {ctx.plan_date.isoformat()}",

@@ -82,13 +82,18 @@ def evaluate(candidate: CandidateView, inventory: list[InventoryItem]) -> tuple[
         ent_c, ent_i = set(candidate.entity_keys), set(item.entity_keys)
         subsumed = same_theme and (not ent_c or not ent_i or ent_c <= ent_i or ent_i <= ent_c)
 
-        def add(check: str, score: float, threshold: float, triggered: bool, detail: str) -> None:
+        def add(check: str, score: float, threshold: float, triggered: bool, detail: str,
+                _item: InventoryItem = item) -> None:
             checks.append(CannibalizationCheck(
                 check=check, score=round(score, 3), threshold=threshold, triggered=triggered,
-                against_article_id=item.id if item.kind == "article" else None,
-                against_opportunity_id=item.id if item.kind == "opportunity" else None,
-                against_label=item.label, detail=detail,
+                against_article_id=_item.id if _item.kind == "article" else None,
+                against_opportunity_id=_item.id if _item.kind == "opportunity" else None,
+                against_label=_item.label, detail=detail,
             ))
+
+        if candidate.slug and item.slug and candidate.slug == item.slug:  # always checked, any topic
+            add("slug", 1.0, 1.0, True, f"slug '{candidate.slug}' already used")
+            hard.append(("slug", item, 1.0))
 
         relevant = same_theme or sem >= SEMANTIC_SOFT_THRESHOLD or candidate.intent_key == item.intent_key
         if not relevant:
@@ -121,10 +126,6 @@ def evaluate(candidate: CandidateView, inventory: list[InventoryItem]) -> tuple[
             add("serp_overlap", serp, SERP_OVERLAP_THRESHOLD, serp_hit, "shared ranking URLs between SERPs")
             if serp_hit:
                 hard.append(("serp_overlap", item, serp))
-
-        if candidate.slug and item.slug and candidate.slug == item.slug:
-            add("slug", 1.0, 1.0, True, f"slug '{candidate.slug}' already used")
-            hard.append(("slug", item, 1.0))
 
     penalty = 0.0
     if hard:

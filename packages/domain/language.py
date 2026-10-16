@@ -90,7 +90,7 @@ TRANSLIT: dict[str, str] = {
 STOPWORDS = {
     "the", "a", "an", "in", "of", "to", "for", "is", "are", "and", "on", "with", "from", "how", "what", "my",
     "me", "में", "है", "से", "का", "की", "के", "को", "और", "या", "पर", "hai", "se", "ka", "ki", "ke", "ko",
-    "ya", "me", "mein", "kare", "karein", "kaise", "kya", "nahi", "ho", "raha", "hota", "it", "does", "do", "can", "i", "which", "best",
+    "ya", "mein", "kare", "karein", "kaise", "kya", "nahi", "ho", "raha", "hota", "it", "does", "do", "can", "i", "which", "best",
 }
 
 

@@ -71,12 +71,15 @@ def template_draft(brief: ContentBrief, ctx: GenerationContext) -> LLMArticlePay
         for s in brief.outline
     ]
     return LLMArticlePayload(
-        title=brief.recommended_title[:120], meta_description=(brief.angle + " " + brief.audience)[:165].ljust(50, "."),
-        h1=brief.recommended_title[:140],
+        title=brief.recommended_title[:120].ljust(10, "."),
+        meta_description=f"Editor draft for '{brief.target_keyword}': {brief.angle}. {brief.audience}."[:165].ljust(50, "."),
+        h1=brief.recommended_title[:140].ljust(10, "."),
         introduction=(f"This draft addresses the search '{brief.target_keyword}'. It was produced from a template because no "
                       "model or curated draft was available, and it must be completed by an editor."),
         sections=sections or [DraftSection(heading="Overview", body="EDITOR DRAFT - outline pending.")] * 3,
-        faq=[FAQItem(question=q, answer="EDITOR DRAFT - answer pending verification.") for q in (brief.questions_to_answer[:3] or ["?", "?", "?"])],
+        faq=[FAQItem(question=q, answer="EDITOR DRAFT - answer pending verification.")
+             for q in (brief.questions_to_answer + [f"What should readers verify about '{brief.target_keyword}'?",
+                                                    "Which official sources apply?", "What are the risks?"])[:3]],
     )
 
 
