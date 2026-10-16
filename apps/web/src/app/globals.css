@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans Devanagari", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-ink-950: #0b1020;
+  --color-ink-900: #111833;
+  --color-ink-800: #1b2447;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-500: #5b5bd6;
+  --color-brand-600: #4b48c4;
+  --color-brand-700: #3d3aa6;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #f6f7fb;
+  color: #0f172a;
+}
+
+body {
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Rendered article preview */
+.prose-atlas {
+  line-height: 1.7;
+  color: #1e293b;
+  font-size: 15px;
+  max-width: 72ch;
+}
+.prose-atlas h1 { font-size: 1.65rem; font-weight: 700; line-height: 1.25; margin: 0 0 1rem; color: #0f172a; }
+.prose-atlas h2 { font-size: 1.2rem; font-weight: 650; margin: 2rem 0 0.6rem; color: #0f172a; }
+.prose-atlas h3 { font-size: 1.02rem; font-weight: 600; margin: 1.4rem 0 0.4rem; color: #0f172a; }
+.prose-atlas p { margin: 0.6rem 0; }
+.prose-atlas ul, .prose-atlas ol { margin: 0.6rem 0 0.6rem 1.3rem; }
+.prose-atlas ul { list-style: disc; }
+.prose-atlas ol { list-style: decimal; }
+.prose-atlas li { margin: 0.25rem 0; }
+.prose-atlas a { color: var(--color-brand-600); text-decoration: underline; text-underline-offset: 2px; }
+.prose-atlas blockquote {
+  border-left: 3px solid #f59e0b;
+  background: #fffbeb;
+  padding: 0.6rem 0.9rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92em;
+}
+.prose-atlas table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 0.8rem 0; display: block; overflow-x: auto; }
+.prose-atlas th, .prose-atlas td { border: 1px solid #e2e8f0; padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+.prose-atlas th { background: #f1f5f9; font-weight: 600; }
+.prose-atlas code { background: #f1f5f9; padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.85em; }
+.prose-atlas sup a { text-decoration: none; font-weight: 600; }
+.prose-atlas section[data-footnotes] { font-size: 0.82em; color: #475569; border-top: 1px solid #e2e8f0; margin-top: 1.5rem; }
+.prose-atlas section[data-footnotes] h2 { font-size: 0.95rem; }
+.prose-atlas strong { color: #0f172a; }
+
+.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
